@@ -1,6 +1,12 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ValidationErrors
+} from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '@app/_services';
@@ -22,14 +28,29 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.form = this.formBuilder.group({
-      email: ['', Validators.required],
-      phone: ['', Validators.required],
-      username: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/)]],
-      ConfirmPassword: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/)]]
-    },
-    { validator: this.passwordMatch }
+    this.form = this.formBuilder.group(
+      {
+        email: ['', Validators.required],
+        phone: ['', Validators.required],
+        username: ['', Validators.required],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(/^.*(?=.{8,})(?=.*[@#$%^&+=]).*$/)
+          ]
+        ],
+        ConfirmPassword: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(/^.*(?=.{8,})(?=.*[@#$%^&+=]).*$/)
+          ]
+        ]
+      },
+      { validator: this.passwordMatch }
     );
   }
 
@@ -42,27 +63,19 @@ export class RegisterComponent implements OnInit {
       return this.form.controls['password'] ===
         this.form.controls['ConfirmPassword']
         ? { valid: true }
-        : null};
+        : null;
     }
+  }
 
-
-  // validateEmailNotTaken(control: AbstractControl) {
-  //   return this.registerService.checkMail(control.value).subscribe(data => {
-  //     if (data && data?.success) {
-  //      return null;
-  //     } else {
-  //      return data.message
-  //     }
-  //   });
-
-  // }
   onSubmit() {
     this.submitted = true;
 
     this.alertService.clear();
 
     if (this.form.invalid) {
-      if(this.form.get('password').value !== this.form.get('ConfirmPassword')){
+      if (
+        this.form.get('password').value !== this.form.get('ConfirmPassword')
+      ) {
         this.alertService.error('Password Should be same');
       } else {
         return;
