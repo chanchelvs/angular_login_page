@@ -13,4 +13,12 @@ export class RegisterService {
       'https://devgroceryapi.spericorn.com/api/auth/register/', registerModel
     );
   }
+
+  public checkMail(email: string): Observable<any> {
+    return this.http.post(
+      'https://devgroceryapi.spericorn.com/api/auth/checkMail', email
+    );
+  }
+
+
 }

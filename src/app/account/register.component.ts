@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '@app/_services';
@@ -26,24 +26,49 @@ export class RegisterComponent implements OnInit {
       email: ['', Validators.required],
       phone: ['', Validators.required],
       username: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/)]],
+      ConfirmPassword: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/)]]
+    },
+    { validator: this.passwordMatch }
+    );
   }
 
   get f() {
     return this.form.controls;
   }
 
+  passwordMatch(): ValidationErrors {
+    if (this && this.form) {
+      return this.form.controls['password'] ===
+        this.form.controls['ConfirmPassword']
+        ? { valid: true }
+        : null};
+    }
+
+
+  // validateEmailNotTaken(control: AbstractControl) {
+  //   return this.registerService.checkMail(control.value).subscribe(data => {
+  //     if (data && data?.success) {
+  //      return null;
+  //     } else {
+  //      return data.message
+  //     }
+  //   });
+
+  // }
   onSubmit() {
     this.submitted = true;
 
     this.alertService.clear();
 
     if (this.form.invalid) {
-      return;
+      if(this.form.get('password').value !== this.form.get('ConfirmPassword')){
+        this.alertService.error('Password Should be same');
+      } else {
+        return;
+      }
     }
     this.loading = true;
-
     this.registerService.register(this.form.value).subscribe(data => {
       if (data && data?.success) {
         this.alertService.success(data.message, {

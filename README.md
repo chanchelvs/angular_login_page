@@ -1,5 +1,10 @@
-# angular-10-registration-login-example
+Angular 10 - Login, Registration Form.
 
-Angular 10 - User Registration and Login Example
+Features
+Login module to register and login
+Profile 
+Logout
 
-To see a demo and further details go to https://jasonwatmore.com/post/2020/07/18/angular-10-user-registration-and-login-example-tutorial
+## Development server
+
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
