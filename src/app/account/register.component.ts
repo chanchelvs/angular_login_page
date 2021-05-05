@@ -77,10 +77,9 @@ export class RegisterComponent implements OnInit {
         this.form.get('password').value !== this.form.get('ConfirmPassword')
       ) {
         this.alertService.error('Password Should be same');
-      } else {
+      }
         return;
       }
-    }
     this.loading = true;
     this.registerService.register(this.form.value).subscribe(data => {
       if (data && data?.success) {
